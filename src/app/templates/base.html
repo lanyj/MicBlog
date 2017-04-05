@@ -1,0 +1,36 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{title}} - microblog</title>
+    {% else %}
+    <title>microblog</title>
+    {% endif %}
+  </head>
+  <body>
+    <table>
+        <tr>
+            <td>Microblog:</td>
+            <td><a href="{{ url_for('index') }}">Home</a></td>
+            {% if not current_user.is_authenticated() %}
+	        <td>| <a href="{{ url_for('login') }}">Log in</a>
+	        or <a href="{{ url_for('sign_up') }}">Sign up</a></td>
+	        {% else %}
+	        <td>| <a href="{{ url_for("users", userId = current_user.id) }}">Profile</a>
+	        | <a href="{{ url_for('logout') }}">Logout</a></td>
+	        {% endif %}
+        </tr>
+    </table>
+    <hr />
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+  {% block js %}{% endblock %}
+</html>

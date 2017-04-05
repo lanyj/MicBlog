@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<center>
+    <h1>Publish</h1>
+	<form action="{{ url_for("publish", userId=current_user.id) }}" method="POST" name="publish">
+	    {{ form.hidden_tag() }}
+	<table>
+	    <tr style="width=400,height=500">
+	        <td>{{ form.body(rows=25,cols=30) }}</td>
+	    </tr>
+	    <tr align='middle'>
+	        <td>{{ form.submit }}</td>
+	    </tr>
+	</table>
+	</form>
+</center>
+{% endblock %}

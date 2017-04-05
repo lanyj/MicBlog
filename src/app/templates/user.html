@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>Name: {{ user.name }}</p>
+<p>Email: {{ user.email }}</p>
+
+<table>
+    <tr>
+        <td>
+            {% if curr.id == user.id %}
+               <td> About ME:</td><td><font onclick="about_me()">{{ user.about_me }}</font></td>
+			{% else %}
+			    <td>About {{ user.name }}:</td><td>{{ user.about_me }}</td>
+			{% endif %}
+        </td>
+    </tr>
+</table>
+<div id="aboutMe" style="display:none;">
+    <form action="{{ url_for("about_me", userId=user.id) }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.describe }}
+        {{ form.submit }}
+    </form>
+</div>
+<hr />
+<table width=100%>
+    <tr>
+        <td><font style="color:#4c4c4c;">last login: {{ user.last_seen.strftime("%a, %d %b %Y %H:%M:%S") }}<font></td>
+    </tr>
+    {% if curr.id == user.id %}
+    <tr>
+        <td><a href="{{ url_for("publish", userId=user.id) }}">Want to publish blogs?</a></td>
+    </tr>
+    {% endif %}
+</table>
+
+<hr />
+<table width=100%>
+	{% if pagination %}
+	    {% if curr.id == user.id %}
+		    {% for blog in pagination.items %}
+			    <tr>
+			        <td style="width=70%;width=100%;TABLE-LAYOUT:fixed;WORD-BREAK:break-all"><font style="color:#ff6600;">{{ blog.body }}</font></td>
+			        <td width=20% align=center><font style="color:#4c4c4c;">{{ blog.timestamp.strftime("%a, %d %b %Y %H:%M:%S") }}</font></td>
+			        <td width=10% align=center><a href={{ url_for('deletePost',postId=blog.id) }}>delete</a></td>
+			    </tr>
+			    <tr>
+			        <td colspan=3><hr /></td>
+			    </tr>
+		    {% endfor %}
+	    {% else %}
+			 {% for blog in pagination.items %}
+			    <tr>
+			        <td style="width=75%;width=100%;TABLE-LAYOUT:fixed;WORD-BREAK:break-all"><font style="color:#ff6600;">{{ blog.body }}</font></td>
+			        <td width=25% align=center><font style="color:#4c4c4c;">{{ blog.timestamp.strftime("%a, %d %b %Y %H:%M:%S") }}</font></td>
+			    </tr>
+			    <tr>
+			        <td colspan=2><hr /></td>
+			    </tr>
+			{% endfor %}
+	    {% endif %}
+	    <tr>
+		    <table width=100%>
+	             <tr>
+				    <td width=50% align=center>
+				    	{% if pagination.has_prev %} {# 分页的前端展示 #}
+					     <a href="{{ url_for('users', userId=user.id, page=pagination.prev_num) }}"><< prev</a>
+					    {% else %}
+					    << None
+					    {% endif %}
+					</td>
+				    <td width=50% align=center> 
+					    {% if pagination.has_next %}
+					    <a href="{{ url_for('users', userId=user.id, page=pagination.next_num) }}">next >></a>
+					    {% else %}
+					    None >>
+					    {% endif %}
+				    </td>
+	             </tr>
+	        </table>
+	    </tr>
+	{% else %}
+	    <tr><td><font style="color:blue;">the guy is so lazy.....</font></td></tr>
+	{% endif %}
+</table>
+{% endblock %}
+
+{% block js %}
+<script>
+function about_me() {
+    target = document.getElementById("aboutMe");
+    if (target.style.display == "block") {
+        target.style.display = "none";
+    } else {
+        target.style.display = "block";
+    }
+}
+</script>
+{% endblock %}

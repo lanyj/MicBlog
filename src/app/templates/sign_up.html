@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<center>
+	<form action="/sign-up", method="POST" name="sign_up">
+	    {{ form.hidden_tag() }}
+	    <table border=1>
+	        <tr>
+	            <td>Nick name:</td><td>{{ form.user_name }}</td>
+	        </tr>
+	   {% for error in form.errors.user_name %}
+		   <tr><td colspan='2'> 
+		 	   <font style="color:red">[-] {{ error }}</font>
+		   </td></tr>
+	   {% endfor %}
+	   <tr>
+	       <td>E-mail:</td><td>{{ form.user_email }}</td>
+	   </tr>
+	   {% for error in form.errors.user_email %}
+	   <tr><td colspan='2'> 
+	 	   <font style="color:red">[-] {{ error }}</font>
+	   </td></tr>
+	   {% endfor %}
+	   <tr>
+		   <td>Password:</td><td>{{ form.user_password }}</td>
+	   </tr> 
+	   <tr>
+		   <td>Confirm password:</td><td><input id="pass2" type="password" /></td>
+	   </tr> 
+	   {% for error in form.errors.user_password %}
+	   <tr><td colspan='2'> 
+	 	   <font style="color:red">[-] {{ error }}</font>
+	   </td></tr>
+	   {% endfor %}
+	   <tr><td colspan='2' align='middle'> 
+	   	   {{ form.submit( onclick="return checkPass()") }}
+	   </td></tr>  
+	   </table>
+	</form>
+</center>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    function checkPass() {
+        pass1=document.getElementById('user_password');
+	    pass2=document.getElementById('pass2');
+	    if(pass1.value != pass2.value) {
+	        alert('password is not equal!');
+	        return false;
+	    }
+    }
+</script>
+{% endblock %}

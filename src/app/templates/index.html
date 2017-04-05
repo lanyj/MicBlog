@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not current_user.is_authenticated() %}
+<h1>Hi, Guys!</h1>
+{% else %}
+<h1>Welcome back, {{ current_user.name }}!</h1>
+{% endif %}
+<table width=100%>
+	{% if pagination %}
+	    {% for p in pagination.items %}
+		    <tr>
+		        <td width=10%><a href={{ url_for('users', userId=p.getOwner().id) }}>{{ p.getOwner().name }}</td>
+		        <td style="width=70%;width=100%;TABLE-LAYOUT:fixed;WORD-BREAK:break-all"><font style="color:#ff6600;">{{ p.body }}</font></td>
+		        <td width=20% align=center><font style="color:#4c4c4c;">{{ p.timestamp.strftime("%a, %d %b %Y %H:%M:%S") }}</font></td>
+		    </tr>
+		    <tr>
+		        <td colspan=3><hr /></td>
+		    </tr>
+	    {% endfor %}
+	    <tr>
+	        <table width=100%>
+	             <tr>
+				    <td align=center>
+				    	{% if pagination.has_prev %} {# 分页的前端展示 #}
+					    <a href="{{ url_for('index', page=pagination.prev_num) }}"><< prev</a>
+					    {% else %}
+					    << None
+					    {% endif %}
+					</td>
+					<td></td>
+				    <td align=center> 
+					    {% if pagination.has_next %}
+					    <a href="{{ url_for('index', page=pagination.next_num) }}">next >></a>
+					    {% else %}
+					    None >>
+					    {% endif %}
+				    </td>
+	             </tr>
+	        </table>
+	    </tr>
+	{% else %}
+	    <tr><td><font style="color:blue;">No Post To Show.....</font></td></tr>
+	{% endif %}
+</table>
+{% endblock %}
